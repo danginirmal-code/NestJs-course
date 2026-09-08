@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { createObserveModule } from '@nestjs/observe';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
@@ -11,6 +11,7 @@ import { CustomerModule } from './customer/customer.module.js';
 import { TestController } from './test/test.controller.js';
 import { UserRolesController } from './user-roles/user-roles.controller.js';
 import { ExceptionController } from './exception/exception.controller.js';
+import { LoggerMiddleware } from './middleware/logger/logger.middleware.js';
 
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
@@ -31,4 +32,9 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
   controllers: [AppController, UserController, ProductController, TestController, UserRolesController, ExceptionController],
   providers: [AppService, ProductService],
 })
-export class AppModule {}
+export class AppModule implements NestModule{
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes("*")
+  }
+
+}
