@@ -1,10 +1,16 @@
-import { Controller ,Get } from '@nestjs/common';
+import { Controller ,Get, Post } from '@nestjs/common';
+import { EmployeeService } from './employee.service.js';
 
 @Controller('employee')
 export class EmployeeController {
-    @Get()
-    getEmployee(){
-        return "User Fetched successfully"
-    }
+    constructor(private readonly employeeService:EmployeeService){}
+   @Post()
+   create(){
+    return this.employeeService.createEmployee()
+   }
+   @Get()
+   getAll(){
+    return this.employeeService.findAll()
+   }
 
 }

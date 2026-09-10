@@ -17,6 +17,10 @@ import { DatabaseController } from './database/database.controller.js';
 import { ConfigModule } from '@nestjs/config';
 import { EnvService } from './env/env.service.js';
 import { EnvController } from './env/env.controller.js';
+import { MongooseModule } from '@nestjs/mongoose';
+import { UserModule } from './user/user.module.js';
+import { ProductModule } from './product/product.module.js';
+import { LibraryModule } from './library/library.module.js';
 
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
@@ -26,6 +30,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     ConfigModule.forRoot(({
      isGlobal:true
     })),
+    MongooseModule.forRoot(process.env.MONGO_URI!),
     // Distributed tracing, auto-correlated logs, request/job metrics, error
     // telemetry, alarms, and more — out of the box. Sign up at https://observe.nestjs.com
     // ObserveModule.forRoot({
@@ -36,9 +41,12 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     EmployeeModule,
     StudentModule,
     CustomerModule,
+    UserModule,
+    ProductModule,
+    LibraryModule,
   ],
-  controllers: [AppController, UserController, ProductController, TestController, UserRolesController, ExceptionController, DatabaseController, EnvController],
-  providers: [AppService, ProductService, DatabaseService, EnvService],
+  controllers: [AppController, TestController, UserRolesController, ExceptionController, DatabaseController, EnvController],
+  providers: [AppService, DatabaseService, EnvService],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {

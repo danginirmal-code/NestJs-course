@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { StudentService } from './student.service.js';
+import { Student } from './student.schema.js';
 
 @Controller('student')
 export class StudentController {
@@ -11,23 +12,23 @@ export class StudentController {
     }
     @Get(':id')
     getOne(@Param('id') id:string){
-        return this.studentService.getStudentById(Number(id))
+        return this.studentService.getStudentById(id)
     }
     @Post()
     create(@Body() body:{name:string,age:number}){
         return this.studentService.createStudent(body)
     }
     @Put(':id')
-    update(@Param('id') id:string, @Body() body:{name:string,age:number}){
-        return this.studentService.updateStudent(Number(id),body)
+    update(@Param('id') id:string, @Body() body:Partial<Student>){
+        return this.studentService.updateStudent(id,body)
     }
     @Patch(':id')
     patch(@Param('id') id:string, @Body() body:Partial<{name:string,age:number}>){
-        return this.studentService.patchStudent(Number(id),body)
+        return this.studentService.patchStudent(id,body)
     }
     @Delete(':id')
     delete(@Param('id') id:string){
-        return this.studentService.deleteStudent(Number(id))
+        return this.studentService.deleteStudent(id)
     }
 
 }   

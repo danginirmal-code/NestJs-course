@@ -1,47 +1,41 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Student, StudentDocument } from './student.schema.js';
 
 @Injectable()
 export class StudentService {
-    private students=[{
-        id:1,name:'Nirmal',age:23
-    },
-{
-    id:2, name:'Ali',age:25
-}]
-getAllStudents(){
-    return this.students
+    constructor(
+        @InjectModel(Student.name) private studentModel:Model<StudentDocument>
+    ){}
+    
+getAllStudents():Promise<Student[]>{
+    return this.studentModel.find().exec()
 }
-getStudentById(id:number){
-    const student=this.students.find((s)=>s.id==id)
+getStudentById(id:string):Promise<Student | null>{
+    const student=this.studentModel.findById(id).exec()
     if(!student){
         throw new NotFoundException("Student not found")
     }
     return student;
 
 }
-createStudent(data:{name:string,age:number}){
-    const newStudent={
-        id:Date.now(),
-        ...data
-    }
-    this.students.push(newStudent)
-    return newStudent;
+createStudent(data:Partial<Student>):Promise<Student>{
+    const newStudent=new this.studentModel(data);
+    return newStudent.save();
 }
-updateStudent(id:number,data:{name:string,age:number}){
-    const index=this.students.findIndex((s)=>s.id===id)
-    if(index===-1) throw new NotFoundException('Student not found');
-    this.students[index]={id,...data}
-    return this.students[index]
+updateStudent(id:string,data:Partial<Student>):Promise<Student | null>{
+    return this.studentModel.findByIdAndUpdate(id,data,{new:true}).exec()
+
+ 
+    
 }
-patchStudent(id:number,data:Partial<{name:string,age:number}>){
-    const student=this.getStudentById(id)
-    Object.assign(student,data)
-    return student
+
+patchStudent(id:string,data:Partial<Student>):Promise<Student | null>{
+    return this.studentModel.findByIdAndUpdate(id,data,{new:true}).exec()
 }
-deleteStudent(id:number){
-    const index=this.students.findIndex((s)=>s.id===id)
-    if(index===-1) throw new NotFoundException('Student not found')
-    const deleted=this.students.splice(index,1)
-    return {message:"student deleted",student:deleted[0]}
+deleteStudent(id:string):Promise<Student | null>{
+    return this.studentModel.findByIdAndDelete(id).exec()
+   
 }
 }
