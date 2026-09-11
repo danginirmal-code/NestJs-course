@@ -21,6 +21,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module.js';
 import { ProductModule } from './product/product.module.js';
 import { LibraryModule } from './library/library.module.js';
+import { ProjectModule } from './project/project.module.js';
 
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
@@ -44,6 +45,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     UserModule,
     ProductModule,
     LibraryModule,
+    ProjectModule,
   ],
   controllers: [AppController, TestController, UserRolesController, ExceptionController, DatabaseController, EnvController],
   providers: [AppService, DatabaseService, EnvService],
