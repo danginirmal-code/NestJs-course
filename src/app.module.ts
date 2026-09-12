@@ -22,15 +22,25 @@ import { UserModule } from './user/user.module.js';
 import { ProductModule } from './product/product.module.js';
 import { LibraryModule } from './library/library.module.js';
 import { ProjectModule } from './project/project.module.js';
+import { UsersModule } from './users/users.module.js';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { EmployeesModule } from './employees/employees.module.js';
+import { AuthModule } from './auth/auth.module.js';
 
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
-
+console.log(process.env.POSTGRESQL)
 @Module({
   imports: [
     ConfigModule.forRoot(({
      isGlobal:true
     })),
+    TypeOrmModule.forRoot({
+      type:'postgres',
+      url:process.env.POSTGRESQL,
+      autoLoadEntities:true,
+      synchronize:true
+    }),
     MongooseModule.forRoot(process.env.MONGO_URI!),
     // Distributed tracing, auto-correlated logs, request/job metrics, error
     // telemetry, alarms, and more — out of the box. Sign up at https://observe.nestjs.com
@@ -46,6 +56,9 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     ProductModule,
     LibraryModule,
     ProjectModule,
+    UsersModule,
+    EmployeesModule,
+    AuthModule,
   ],
   controllers: [AppController, TestController, UserRolesController, ExceptionController, DatabaseController, EnvController],
   providers: [AppService, DatabaseService, EnvService],

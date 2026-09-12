@@ -1,20 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from './user.schema.js';
+import { Users } from './users.schema.js';
 import { Model } from 'mongoose';
 
 @Injectable()
 export class UserService {
-    constructor(@InjectModel(User.name)  private userModel:Model<User>){}
+    constructor(@InjectModel(Users.name)  private userModel:Model<Users>){}
 
-    async createUser():Promise<User>{
+    async createUser():Promise<Users>{
     const user=new this.userModel({name:"Nirmal",address:{
         street:123,
         city:"Nepal"
     }})
     return user.save()
 }
-    async getAll():Promise<User[]>{
+    async getAll():Promise<Users[]>{
         return this.userModel.find()
     }
 }
