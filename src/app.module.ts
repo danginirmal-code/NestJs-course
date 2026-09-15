@@ -26,6 +26,10 @@ import { UsersModule } from './users/users.module.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EmployeesModule } from './employees/employees.module.js';
 import { AuthModule } from './auth/auth.module.js';
+import { BookModule } from './book/book.module.js';
+import { GraphQLModule } from '@nestjs/graphql';
+import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
+import { join } from 'path';
 
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
@@ -35,6 +39,12 @@ console.log(process.env.POSTGRESQL)
     ConfigModule.forRoot(({
      isGlobal:true
     })),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver:ApolloDriver,
+      autoSchemaFile:join(process.cwd(),'src/schema.gql'),
+      sortSchema:true,
+      playground:true
+    }),
     TypeOrmModule.forRoot({
       type:'postgres',
       url:process.env.POSTGRESQL,
@@ -59,6 +69,7 @@ console.log(process.env.POSTGRESQL)
     UsersModule,
     EmployeesModule,
     AuthModule,
+    BookModule,
   ],
   controllers: [AppController, TestController, UserRolesController, ExceptionController, DatabaseController, EnvController],
   providers: [AppService, DatabaseService, EnvService],
